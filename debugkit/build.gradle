@@ -1,58 +1,18 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
-
-ext {
-    bintrayRepo = 'DebugKit'
-    bintrayName = 'debugkit'
-
-    publishedGroupId = 'com.hulab.android'
-    libraryName = 'DebugKit'
-    artifact = 'debugkit'
-
-    libraryDescription = 'DebugKit lib for Android allows you to use a fancy hovering debug tool to trigger some actions directly in the app.'
-
-    siteUrl = 'https://github.com/hulab/debugkit'
-    gitUrl = 'https://github.com/hulab/debugkit'
-    vcsUrl = 'https://github.com/hulab/debugkit.git'
-
-    libraryVersion = '1.2.1'
-
-    developerId = 'nebneb'
-    developerName = 'Pierre-Emmanuel Altieri'
-    developerEmail = 'pe.altieri@gmail.com'
-
-    licenseName = 'The Apache Software License, Version 2.0'
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-    allLicenses = ["Apache-2.0"]
-
-    user = project.hasProperty('bintray.user') ? project.property('bintray.user') : System.getenv('BINTRAY_USER')
-    key = project.hasProperty('bintray.apikey') ? project.property('bintray.apikey') : System.getenv('BINTRAY_API_KEY')
-    // jFrog plugin must be declared for this line to work
-    configurations = ['archives']
-    // Package info for BinTray
-}
-
-install {
-    repositories.mavenInstaller {
-        pom.project {
-            group "com.hulab.android"
-            artifactId "debugkit"
-            version "1.2.1"
-        }
-    }
-}
+group='com.github.liangjingkanji'
 
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
 
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 7
-        versionName "1.2.1"
+        versionCode 8
+        versionName "1.2.2"
     }
     buildTypes {
         release {
@@ -65,7 +25,9 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
-apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
-apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+repositories {
+    mavenCentral()
+}
