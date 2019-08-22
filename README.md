@@ -34,42 +34,22 @@ implementation 'com.github.liangjingkanji:debugkit:1.2.2'
 
 # Usage
 
-```java
-final DevTool.Builder builder = new DevTool.Builder(mContext);
+```kotlin
+        dev {
 
-builder.addFunction(new DebugFunction() {
-            @Override
-            public String call() throws Exception {
-                log("doing some stuff...");
-                doSomeStuff();
-                return "Some stuff was done.";
+            startX = 50f
+            startY = 200f
+            textSize = this@ExampleActivity.textSize
+            theme = this@ExampleActivity.theme
+
+            function {
+                log("Some stuff was done.")
             }
-        }).addFunction(new DebugFunction() {
-            @Override
-            public String call() throws Exception {
-                log("doing some other stuff...");
-                doSomeStuff();
-                return "Some stuff was done.";
+            
+            function("title") {
+                log("Some stuff was done.")
             }
-        }).addFunction(new DebugFunction("My function") {
-            @Override
-            public String call() throws Exception {
-                log("doing some stuff again and again...");
-                doSomeStuff();
-                return "This function has a title!";
-            }
-        });                
-        // This is a prebuilt function to clear the console, you can call clear() in any function
-        // as well.
-        .addFunction(new DebugFunction.Clear("Clear"))
-        // This is a prebuilt function to dump the content of your shared preferences file.
-        .addFunction(new DebugFunction.DumpSharedPreferences("Shared prefs", PREFS_FILE_NAME));
- 
-        // optional, DevToolFragment.DevToolTheme.DARK is set by default
-builder.setTheme(DevToolFragment.DevToolTheme.DARK)
-        //you can set the initial position of your debug tool (0,0) by default
-       .displayAt(100, 100)
-       .build();
+        }
 ```
 
 ## Result
