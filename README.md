@@ -13,14 +13,23 @@ You can download an example apk here :
 [DebugKit-Example.apk](https://github.com/hulab/debugkit/blob/master/resources/DebugKit-Example.apk)
 
 # Installation
-```groovy
-repositories {
-    jcenter()
-}
+project of build.gradle
 
-dependencies {
-    compile 'com.hulab.android:debugkit:1.2.1'
+```groovy
+allprojects {
+    repositories {
+        // ...
+        maven { url 'https://jitpack.io' }
+    }
 }
+```
+
+
+
+module of build.gradle
+
+```
+implementation 'com.github.liangjingkanji:debugkit:1.2.2'
 ```
 
 # Usage
