@@ -42,4 +42,9 @@ class DevFunction(private val devFragment: DevFragment) {
     }
 
 
+    fun close() {
+        devFragment.fragmentManager.beginTransaction().remove(devFragment).commit()
+    }
+
+
 }

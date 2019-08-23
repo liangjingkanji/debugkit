@@ -24,6 +24,9 @@ class ExampleActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
 
         val fab = initView()
 
+        // global switch
+//        DevTool.enabled = false
+
         fab?.setOnClickListener {
 
             val devTool = DevTool(this@ExampleActivity).apply {
@@ -32,23 +35,33 @@ class ExampleActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
             }
 
             for (i in 0 until seekbar.progress) {
-                devTool.function { }
+                devTool.function {
+                    // do something
+                }
             }
 
             devTool.build()
         }
 
+
         dev {
 
-            startX = 50f
+            /*startX = 50f
             startY = 200f
             textSize = this@ExampleActivity.textSize
-            theme = this@ExampleActivity.theme
+            theme = this@ExampleActivity.theme*/
 
-            function {
+            function("Some stuff") {
                 log("Some stuff was done.")
             }
+
+            function {
+                // do something
+
+                close() // close this devTool
+            }
         }
+
 
     }
 
