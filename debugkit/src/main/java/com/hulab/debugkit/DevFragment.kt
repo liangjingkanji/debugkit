@@ -153,7 +153,7 @@ class DevFragment : Fragment() {
         mMinifyButton!!.setOnClickListener { switchMinify() }
         applyTheme()
 
-        softLog("ready.")
+        softLog("ready")
     }
 
     /**
@@ -247,7 +247,7 @@ class DevFragment : Fragment() {
     fun log(string: String) {
         val sb = StringBuilder(mConsole!!.text)
         sb.append("\n")
-        sb.append(currentTime).append(" > ")
+        sb.append(currentTime).append("   ")
         sb.append(string)
         write(sb.toString())
     }
@@ -257,12 +257,12 @@ class DevFragment : Fragment() {
      */
     fun clear() {
         mConsole!!.text = ""
-        softLog("ready.")
+        softLog("ready")
     }
 
     private fun softLog(string: String) {
         val sb = StringBuilder(mConsole!!.text)
-        sb.append(currentTime).append(" > ")
+        sb.append(currentTime).append("   ")
         sb.append(string)
         write(sb.toString())
     }
@@ -332,7 +332,7 @@ class DevFragment : Fragment() {
      * This method will be called on build. You can call this method if you want to change the
      * theme of the console theme at runtime.
      */
-    fun applyTheme() {
+    private fun applyTheme() {
         when (mTheme) {
             DevToolTheme.LIGHT -> {
                 mConsole!!.setBackgroundColor(getColor(R.color.debug_kit_primary_light))

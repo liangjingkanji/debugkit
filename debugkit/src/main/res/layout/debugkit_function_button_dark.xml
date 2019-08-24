@@ -4,5 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/toolsButton.dark"
     android:elevation="9dp"
+    android:textAllCaps="false"
     android:background="@drawable/rounded_button_dark"
     tools:text="F1" />

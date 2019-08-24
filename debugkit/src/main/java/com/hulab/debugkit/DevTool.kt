@@ -7,15 +7,6 @@ import java.util.*
  * Created by Nebneb on 21/03/2017 at 17:14.
  */
 
-
-fun Activity.dev(devTool: DevTool? = null, block: DevTool.() -> Unit) {
-
-    val temp = devTool ?: DevTool(this)
-    temp.block()
-    temp.build()
-
-}
-
 class DevTool(private val activity: Activity) {
 
     companion object {

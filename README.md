@@ -29,7 +29,7 @@ allprojects {
 module of build.gradle
 
 ```
-implementation 'com.github.liangjingkanji:debugkit:1.2.3'
+implementation 'com.github.liangjingkanji:debugkit:1.2.4'
 ```
 
 # Usage

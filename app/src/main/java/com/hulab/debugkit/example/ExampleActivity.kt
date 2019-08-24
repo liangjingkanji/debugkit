@@ -8,7 +8,6 @@ import android.view.View
 import android.widget.*
 import com.hulab.debugkit.DevFragment
 import com.hulab.debugkit.DevTool
-import com.hulab.debugkit.dev
 
 
 class ExampleActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
@@ -42,26 +41,6 @@ class ExampleActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
 
             devTool.build()
         }
-
-
-        dev {
-
-            /*startX = 50f
-            startY = 200f
-            textSize = this@ExampleActivity.textSize
-            theme = this@ExampleActivity.theme*/
-
-            function("Some stuff") {
-                log("Some stuff was done.")
-            }
-
-            function {
-                // do something
-
-                close() // close this devTool
-            }
-        }
-
 
     }
 
