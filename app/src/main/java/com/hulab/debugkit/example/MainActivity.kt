@@ -10,7 +10,7 @@ import com.hulab.debugkit.DevFragment
 import com.hulab.debugkit.DevTool
 
 
-class ExampleActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
+class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private val textSize = 12
     private lateinit var seekbar: SeekBar
@@ -19,7 +19,7 @@ class ExampleActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_example)
+        setContentView(R.layout.activity_main)
 
         val fab = initView()
 
@@ -28,9 +28,9 @@ class ExampleActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
 
         fab?.setOnClickListener {
 
-            val devTool = DevTool(this@ExampleActivity).apply {
-                textSize = this@ExampleActivity.textSize
-                theme = this@ExampleActivity.theme
+            val devTool = DevTool(this@MainActivity).apply {
+                textSize = this@MainActivity.textSize
+                theme = this@MainActivity.theme
             }
 
             for (i in 0 until seekbar.progress) {

@@ -10,7 +10,7 @@
         android:label="@string/debugkit_app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ExampleActivity"
+            android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
             <intent-filter>
