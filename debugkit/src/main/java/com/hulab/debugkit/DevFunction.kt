@@ -42,8 +42,11 @@ class DevFunction(private val devFragment: DevFragment) {
     }
 
 
+    /**
+     * close devTool
+     */
     fun close() {
-        devFragment.fragmentManager.beginTransaction().remove(devFragment).commit()
+        devFragment.close()
     }
 
 

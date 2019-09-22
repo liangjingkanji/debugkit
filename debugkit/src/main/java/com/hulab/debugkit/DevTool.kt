@@ -1,13 +1,16 @@
 package com.hulab.debugkit
 
 import android.app.Activity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import java.util.*
 
 /**
  * Created by Nebneb on 21/03/2017 at 17:14.
  */
 
-class DevTool(private val activity: Activity) {
+class DevTool(private val activity: Activity) : LifecycleObserver {
 
     companion object {
         var enabled = true
@@ -38,6 +41,11 @@ class DevTool(private val activity: Activity) {
         devFunction.title = title
         devFunction.block = block
         this.functions.add(devFunction)
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    fun close() {
+        devFragment.close()
     }
 
     /**

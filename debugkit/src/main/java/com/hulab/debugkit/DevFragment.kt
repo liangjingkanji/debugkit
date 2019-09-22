@@ -29,18 +29,18 @@ class DevFragment : Fragment() {
     private var consoleWidth = 250
     private var consoleTextSize = 12
 
-    private var mRootView: View? = null
+    private var rootView: View? = null
 
-    private var mInflater: LayoutInflater? = null
+    private var inflater: LayoutInflater? = null
 
-    private var mFunctions: MutableList<DevFunction> = ArrayList()
+    private var functions: MutableList<DevFunction> = ArrayList()
 
-    private var mConsole: TextView? = null
-    private var mConsoleContainer: ScrollView? = null
+    private var console: TextView? = null
+    private var consoleContainer: ScrollView? = null
 
-    private var mPanel: View? = null
+    private var panel: View? = null
 
-    private var mMinifyButton: View? = null
+    private var minifyButton: View? = null
 
     private var dX: Float = 0.toFloat()
     private var dY: Float = 0.toFloat()
@@ -48,7 +48,7 @@ class DevFragment : Fragment() {
     private var startX = 0f
     private var startY = 0f
 
-    private var mTheme = DevToolTheme.DARK
+    private var theme = DevToolTheme.DARK
 
     private val currentTime: String
         get() {
@@ -66,26 +66,26 @@ class DevFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mInflater = inflater
-        mRootView = inflater.inflate(R.layout.debugkit_fragment_dev_tools, container, false)
-        return mRootView
+        this.inflater = inflater
+        rootView = inflater.inflate(R.layout.debugkit_fragment_dev_tools, container, false)
+        return rootView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val mButtonContainer =
-            mRootView!!.findViewById<View>(R.id.debugkit_button_container) as LinearLayout
+            rootView!!.findViewById<View>(R.id.debugkit_button_container) as LinearLayout
 
-        for (i in mFunctions.indices) {
+        for (i in functions.indices) {
 
-            val button = mInflater!!
+            val button = inflater!!
                 .inflate(
-                    if (mTheme == DevToolTheme.DARK) R.layout.debugkit_function_button_dark else R.layout.debugkit_function_button_light,
+                    if (theme == DevToolTheme.DARK) R.layout.debugkit_function_button_dark else R.layout.debugkit_function_button_light,
                     mButtonContainer,
                     false
                 ) as Button
-            val function = mFunctions[i]
+            val function = functions[i]
             val title = if (function.title == null) "F" + (i + 1) else function.title
 
             if (function.title != null) {
@@ -111,15 +111,15 @@ class DevFragment : Fragment() {
             mButtonContainer.addView(button)
         }
 
-        mConsole = mRootView!!.findViewById<View>(R.id.debugkit_console) as TextView
-        mConsoleContainer =
-            mRootView!!.findViewById<View>(R.id.debugkit_console_scroll_view) as ScrollView
+        console = rootView!!.findViewById<View>(R.id.debugkit_console) as TextView
+        consoleContainer =
+            rootView!!.findViewById<View>(R.id.debugkit_console_scroll_view) as ScrollView
 
-        mMinifyButton = mRootView!!.findViewById(R.id.debugkit_tools_minify)
+        minifyButton = rootView!!.findViewById(R.id.debugkit_tools_minify)
 
-        mPanel = mRootView!!.findViewById(R.id.debugkit_tools_panel)
+        panel = rootView!!.findViewById(R.id.debugkit_tools_panel)
 
-        mRootView!!.findViewById<View>(R.id.debugkit_tools_close_button).setOnClickListener {
+        rootView!!.findViewById<View>(R.id.debugkit_tools_close_button).setOnClickListener {
             if (isAdded) {
                 try {
                     activity!!.fragmentManager
@@ -133,24 +133,24 @@ class DevFragment : Fragment() {
             }
         }
 
-        mRootView!!.setOnTouchListener { v, event -> this@DevFragment.onTouch(v, event) }
+        rootView!!.setOnTouchListener { v, event -> this@DevFragment.onTouch(v, event) }
 
 
-        var layoutParams = mConsoleContainer!!.layoutParams
+        var layoutParams = consoleContainer!!.layoutParams
         layoutParams.height = dpTopX(consoleHeight)
-        mConsoleContainer!!.layoutParams = layoutParams
+        consoleContainer!!.layoutParams = layoutParams
 
-        layoutParams = mConsole!!.layoutParams
+        layoutParams = console!!.layoutParams
         layoutParams.height = dpTopX(consoleHeight)
         layoutParams.width = dpTopX(consoleWidth)
-        mConsole!!.layoutParams = layoutParams
-        mConsole!!.minimumHeight = dpTopX(consoleHeight)
+        console!!.layoutParams = layoutParams
+        console!!.minimumHeight = dpTopX(consoleHeight)
 
         view.x = startX
         view.y = startY
 
-        mMinifyButton!!.setTag(mMinifyButton!!.id, false)
-        mMinifyButton!!.setOnClickListener { switchMinify() }
+        minifyButton!!.setTag(minifyButton!!.id, false)
+        minifyButton!!.setOnClickListener { switchMinify() }
         applyTheme()
 
         softLog("ready")
@@ -165,7 +165,7 @@ class DevFragment : Fragment() {
         val heightValueAnimator: ValueAnimator
         val widthValueAnimator: ValueAnimator
 
-        if (mMinifyButton!!.getTag(mMinifyButton!!.id) as Boolean) {
+        if (minifyButton!!.getTag(minifyButton!!.id) as Boolean) {
             rotateAnimation = RotateAnimation(
                 180f,
                 0f,
@@ -176,7 +176,7 @@ class DevFragment : Fragment() {
             )
             heightValueAnimator = ValueAnimator.ofInt(0, dpTopX(consoleHeight))
             widthValueAnimator = ValueAnimator.ofInt(dpTopX(MINIFY_WIDTH), dpTopX(consoleWidth))
-            mMinifyButton!!.setTag(mMinifyButton!!.id, false)
+            minifyButton!!.setTag(minifyButton!!.id, false)
         } else {
             rotateAnimation = RotateAnimation(
                 0f,
@@ -188,25 +188,25 @@ class DevFragment : Fragment() {
             )
             heightValueAnimator = ValueAnimator.ofInt(dpTopX(consoleHeight), 0)
             widthValueAnimator = ValueAnimator.ofInt(dpTopX(consoleWidth), dpTopX(MINIFY_WIDTH))
-            mMinifyButton!!.setTag(mMinifyButton!!.id, true)
+            minifyButton!!.setTag(minifyButton!!.id, true)
         }
 
         heightValueAnimator.duration = 200
         heightValueAnimator.addUpdateListener { animation ->
             val value = animation.animatedValue as Int
-            mConsoleContainer!!.layoutParams.height = value
-            mConsoleContainer!!.requestLayout()
+            consoleContainer!!.layoutParams.height = value
+            consoleContainer!!.requestLayout()
         }
         widthValueAnimator.duration = 200
         widthValueAnimator.addUpdateListener { animation ->
             val value = animation.animatedValue as Int
-            mConsole!!.layoutParams.width = value
-            mConsole!!.requestLayout()
+            console!!.layoutParams.width = value
+            console!!.requestLayout()
         }
 
         rotateAnimation.duration = 200
         rotateAnimation.fillAfter = true
-        mMinifyButton!!.startAnimation(rotateAnimation)
+        minifyButton!!.startAnimation(rotateAnimation)
         heightValueAnimator.interpolator = AccelerateInterpolator()
         heightValueAnimator.start()
         widthValueAnimator.interpolator = AccelerateInterpolator()
@@ -245,7 +245,7 @@ class DevFragment : Fragment() {
      * `HH:mm:ss > string`
      */
     fun log(string: String) {
-        val sb = StringBuilder(mConsole!!.text)
+        val sb = StringBuilder(console!!.text)
         sb.append("\n")
         sb.append(currentTime).append("   ")
         sb.append(string)
@@ -256,25 +256,25 @@ class DevFragment : Fragment() {
      * Call this function at runtime if you want to clear the console.
      */
     fun clear() {
-        mConsole!!.text = ""
+        console!!.text = ""
         softLog("ready")
     }
 
     private fun softLog(string: String) {
-        val sb = StringBuilder(mConsole!!.text)
+        val sb = StringBuilder(console!!.text)
         sb.append(currentTime).append("   ")
         sb.append(string)
         write(sb.toString())
     }
 
     private fun write(string: String) {
-        mConsole!!.text = string
-        mConsole!!.post {
-            mConsole!!.requestLayout()
-            if (mConsoleContainer != null) {
-                mConsoleContainer!!.post {
-                    mConsoleContainer!!.fullScroll(ScrollView.FOCUS_DOWN)
-                    mConsoleContainer!!.requestLayout()
+        console!!.text = string
+        console!!.post {
+            console!!.requestLayout()
+            if (consoleContainer != null) {
+                consoleContainer!!.post {
+                    consoleContainer!!.fullScroll(ScrollView.FOCUS_DOWN)
+                    consoleContainer!!.requestLayout()
                 }
             }
         }
@@ -287,7 +287,7 @@ class DevFragment : Fragment() {
      * @param function must implement [DevFunction].
      */
     fun addFunction(function: DevFunction) {
-        this.mFunctions.add(function)
+        this.functions.add(function)
     }
 
     /**
@@ -296,7 +296,7 @@ class DevFragment : Fragment() {
      * @param functions must be a List of [DevFunction].
      */
     fun setFunctionList(functions: MutableList<DevFunction>) {
-        this.mFunctions = functions
+        this.functions = functions
     }
 
     /**
@@ -305,7 +305,7 @@ class DevFragment : Fragment() {
      * @param sp the size of the text in sp.
      */
     fun changeConsoleTextSize(sp: Int) {
-        mConsole!!.post { mConsole!!.setTextSize(TypedValue.COMPLEX_UNIT_SP, sp.toFloat()) }
+        console!!.post { console!!.setTextSize(TypedValue.COMPLEX_UNIT_SP, sp.toFloat()) }
     }
 
     /**
@@ -324,7 +324,7 @@ class DevFragment : Fragment() {
      * The default theme is `DevToolTheme.DARK`
      */
     fun setTheme(theme: DevToolTheme) {
-        this.mTheme = theme
+        this.theme = theme
     }
 
 
@@ -333,18 +333,18 @@ class DevFragment : Fragment() {
      * theme of the console theme at runtime.
      */
     private fun applyTheme() {
-        when (mTheme) {
+        when (theme) {
             DevToolTheme.LIGHT -> {
-                mConsole!!.setBackgroundColor(getColor(R.color.debug_kit_primary_light))
-                mConsole!!.setTextColor(getColor(R.color.debug_kit_background_black_light))
+                console!!.setBackgroundColor(getColor(R.color.debug_kit_primary_light))
+                console!!.setTextColor(getColor(R.color.debug_kit_background_black_light))
             }
             else -> {
-                mConsole!!.setBackgroundColor(getColor(R.color.debug_kit_background_black))
-                mConsole!!.setTextColor(getColor(R.color.debug_kit_primary))
+                console!!.setBackgroundColor(getColor(R.color.debug_kit_background_black))
+                console!!.setTextColor(getColor(R.color.debug_kit_primary))
             }
         }
 
-        mConsole!!.setTextSize(TypedValue.COMPLEX_UNIT_SP, consoleTextSize.toFloat())
+        console!!.setTextSize(TypedValue.COMPLEX_UNIT_SP, consoleTextSize.toFloat())
     }
 
     private fun getColor(resId: Int): Int {
@@ -371,6 +371,13 @@ class DevFragment : Fragment() {
     fun setConsoleHeight(consoleHeight: Int) {
         this.consoleHeight = consoleHeight
     }
+
+
+    internal fun close() {
+        val fragmentManager = fragmentManager ?: return
+        fragmentManager.beginTransaction().remove(this).commit()
+    }
+
 
     /**
      * Set the console width.

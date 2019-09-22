@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:background="@android:color/white"
+    android:layout_height="match_parent"
+    tools:context=".SampleFragment">
 
     <TextView
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Main Activity" />
+        android:text="Sample Fragment" />
 
 </FrameLayout>
