@@ -9,8 +9,13 @@ fun Activity.dev(devTool: DevTool? = null, block: DevTool.() -> Unit) {
     temp.build()
 }
 
+/**
+ *
+ * Note:  close devTool when lifecycle of fragment on destroyView
+ *
+ */
 fun Fragment.dev(devTool: DevTool? = null, block: DevTool.() -> Unit) {
-    val temp = devTool ?: DevTool(activity ?: return)
+    val temp = devTool ?: DevTool(this.activity ?: return)
     lifecycle.addObserver(temp)
     temp.block()
     temp.build()

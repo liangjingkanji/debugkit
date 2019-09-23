@@ -1,8 +1,10 @@
 package com.hulab.debugkit
 
 import android.app.Activity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 import java.util.*
 
@@ -43,9 +45,11 @@ class DevTool(private val activity: Activity) : LifecycleObserver {
         this.functions.add(devFunction)
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    fun close() {
-        devFragment.close()
+    @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
+    fun close(lifecycleOwner: LifecycleOwner) {
+        if (lifecycleOwner is Fragment && lifecycleOwner.isRemoving) {
+            devFragment.close()
+        }
     }
 
     /**
