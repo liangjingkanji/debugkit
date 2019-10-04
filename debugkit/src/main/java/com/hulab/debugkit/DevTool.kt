@@ -16,6 +16,9 @@ class DevTool(private val activity: Activity) : LifecycleObserver {
 
     companion object {
         var enabled = true
+
+        internal var startX = 0f
+        internal var startY = 0f
     }
 
     private val functions = ArrayList<DevFunction>()
@@ -27,8 +30,8 @@ class DevTool(private val activity: Activity) : LifecycleObserver {
 
     var theme: DevFragment.DevToolTheme = DevFragment.DevToolTheme.DARK
     var textSize: Int? = null
-    var startX = 0f
-    var startY = 0f
+    var startX = DevTool.startX
+    var startY = DevTool.startY
 
     /**
      * Add function to the function list. This will generate a button on the devFragment's panel.
@@ -45,7 +48,8 @@ class DevTool(private val activity: Activity) : LifecycleObserver {
         this.functions.add(devFunction)
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     fun close(lifecycleOwner: LifecycleOwner) {
         if (lifecycleOwner is Fragment && lifecycleOwner.isRemoving) {
             devFragment.close()
@@ -69,8 +73,8 @@ class DevTool(private val activity: Activity) : LifecycleObserver {
         try {
             val fragmentManager = activity.fragmentManager
             fragmentManager.beginTransaction()
-                .add(android.R.id.content, devFragment)
-                .commit()
+                    .add(android.R.id.content, devFragment)
+                    .commit()
         } catch (exception: Exception) {
             exception.printStackTrace()
         }

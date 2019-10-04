@@ -2,17 +2,17 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.github.dcendents.android-maven'
-group='com.github.liangjingkanji'
+group = 'com.github.liangjingkanji'
 
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 29
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 27
-        versionCode 9
-        versionName "1.2.3"
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
     }
     buildTypes {
         release {

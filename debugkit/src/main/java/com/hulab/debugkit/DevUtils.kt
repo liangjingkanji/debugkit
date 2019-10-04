@@ -11,7 +11,7 @@ fun Activity.dev(devTool: DevTool? = null, block: DevTool.() -> Unit) {
 
 /**
  *
- * Note:  close devTool when lifecycle of fragment on destroyView
+ * Note:  在Fragment视图销毁(DestroyView)时会被关闭调试窗口
  *
  */
 fun Fragment.dev(devTool: DevTool? = null, block: DevTool.() -> Unit) {

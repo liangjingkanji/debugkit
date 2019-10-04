@@ -1,14 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2018, Umbrella CompanyLimited All rights reserved.
+  ~ Project：debugkit
+  ~ Author：Drake
+  ~ Date：10/3/19 7:46 PM
+  -->
+
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    tools:context="com.hulab.debugkit.sample.Sample2Fragment">
+    tools:context=".fragment.HomeFragment">
 
     <TextView
         android:layout_width="match_parent"
-        android:gravity="center"
         android:layout_height="match_parent"
-        android:text="Sample2 Fragment" />
+        android:text="HomeFragment" />
 
 </FrameLayout>

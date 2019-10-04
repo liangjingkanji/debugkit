@@ -7,12 +7,20 @@ DebugKit lib for Android allows you to use a fancy hovering debug tool to trigge
 
 * Android SDK 15+
 
-## Example
 
-You can download an example apk here :
-[DebugKit-Example.apk](https://github.com/hulab/debugkit/blob/master/resources/DebugKit-Example.apk)
+
+### Fork Feature
+
+- Support Activity
+- Support Fragment (Jetpack Navigation)
+- Kotlin
+
+
+
+
 
 # Installation
+
 project of build.gradle
 
 ```groovy
@@ -28,28 +36,25 @@ allprojects {
 
 module of build.gradle
 
+```groovy
+implementation 'com.github.liangjingkanji:debugkit:1.2.8'
 ```
-implementation 'com.github.liangjingkanji:debugkit:1.2.7'
-```
+
+
 
 # Usage
 
 ```kotlin
-        dev {
+dev {
 
-            startX = 50f
-            startY = 200f
-            textSize = this@ExampleActivity.textSize
-            theme = this@ExampleActivity.theme
+  function {
+    log("Some stuff was done.")
+  }
 
-            function {
-                log("Some stuff was done.")
-            }
-            
-            function("title") {
-                log("Some stuff was done.")
-            }
-        }
+  function("title") {
+    // do something
+  }
+}
 ```
 
 ## Result

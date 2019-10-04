@@ -15,7 +15,7 @@ import android.view.animation.RotateAnimation
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
-import android.widget.TextView
+import kotlinx.android.synthetic.main.debugkit_fragment_dev_tools.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
@@ -24,23 +24,18 @@ import kotlin.math.roundToInt
  * Created by Nebneb on 26/10/2016 at 11:27.
  */
 
-class DevFragment : Fragment() {
+class DevFragment : Fragment(), View.OnTouchListener {
+
+
     private var consoleHeight = 110
     private var consoleWidth = 250
     private var consoleTextSize = 12
 
-    private var rootView: View? = null
 
-    private var inflater: LayoutInflater? = null
+    private lateinit var inflater: LayoutInflater
 
     private var functions: MutableList<DevFunction> = ArrayList()
 
-    private var console: TextView? = null
-    private var consoleContainer: ScrollView? = null
-
-    private var panel: View? = null
-
-    private var minifyButton: View? = null
 
     private var dX: Float = 0.toFloat()
     private var dY: Float = 0.toFloat()
@@ -62,29 +57,28 @@ class DevFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         this.inflater = inflater
-        rootView = inflater.inflate(R.layout.debugkit_fragment_dev_tools, container, false)
-        return rootView
+
+        return inflater.inflate(R.layout.debugkit_fragment_dev_tools, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mButtonContainer =
-            rootView!!.findViewById<View>(R.id.debugkit_button_container) as LinearLayout
 
         for (i in functions.indices) {
 
-            val button = inflater!!
-                .inflate(
+            val button = inflater.inflate(
                     if (theme == DevToolTheme.DARK) R.layout.debugkit_function_button_dark else R.layout.debugkit_function_button_light,
-                    mButtonContainer,
+                    ll_button_container,
                     false
-                ) as Button
+            ) as Button
+
+
             val function = functions[i]
             val title = if (function.title == null) "F" + (i + 1) else function.title
 
@@ -95,6 +89,8 @@ class DevFragment : Fragment() {
             }
 
             button.text = title
+
+
 
             button.setOnClickListener {
                 try {
@@ -108,52 +104,65 @@ class DevFragment : Fragment() {
                 }
             }
 
-            mButtonContainer.addView(button)
+            ll_button_container.addView(button)
         }
 
-        console = rootView!!.findViewById<View>(R.id.debugkit_console) as TextView
-        consoleContainer =
-            rootView!!.findViewById<View>(R.id.debugkit_console_scroll_view) as ScrollView
 
-        minifyButton = rootView!!.findViewById(R.id.debugkit_tools_minify)
 
-        panel = rootView!!.findViewById(R.id.debugkit_tools_panel)
-
-        rootView!!.findViewById<View>(R.id.debugkit_tools_close_button).setOnClickListener {
+        iv_tools_close_button.setOnClickListener {
             if (isAdded) {
                 try {
                     activity!!.fragmentManager
-                        .beginTransaction()
-                        .remove(this@DevFragment)
-                        .commit()
+                            .beginTransaction()
+                            .remove(this@DevFragment)
+                            .commit()
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-
             }
         }
 
-        rootView!!.setOnTouchListener { v, event -> this@DevFragment.onTouch(v, event) }
+
+        view.setOnTouchListener(this)
 
 
-        var layoutParams = consoleContainer!!.layoutParams
+        var layoutParams = sv_console_scroll_view.layoutParams
         layoutParams.height = dpTopX(consoleHeight)
-        consoleContainer!!.layoutParams = layoutParams
+        sv_console_scroll_view.layoutParams = layoutParams
 
-        layoutParams = console!!.layoutParams
+        layoutParams = tv_console.layoutParams
         layoutParams.height = dpTopX(consoleHeight)
         layoutParams.width = dpTopX(consoleWidth)
-        console!!.layoutParams = layoutParams
-        console!!.minimumHeight = dpTopX(consoleHeight)
+        tv_console.layoutParams = layoutParams
+        tv_console.minimumHeight = dpTopX(consoleHeight)
 
         view.x = startX
         view.y = startY
 
-        minifyButton!!.setTag(minifyButton!!.id, false)
-        minifyButton!!.setOnClickListener { switchMinify() }
-        applyTheme()
+        iv_tools_minify?.apply {
+            setTag(id, false)
+            setOnClickListener { switchMinify() }
+        }
 
+        applyTheme()
         softLog("ready")
+    }
+
+    override fun onTouch(v: View, event: MotionEvent): Boolean {
+
+        val temp = view ?: return false
+
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                dX = temp.x - event.rawX
+                dY = temp.y - event.rawY
+            }
+            MotionEvent.ACTION_MOVE -> {
+                temp.x = event.rawX + dX
+                temp.y = event.rawY + dY
+            }
+        }
+        return true
     }
 
     /**
@@ -165,74 +174,54 @@ class DevFragment : Fragment() {
         val heightValueAnimator: ValueAnimator
         val widthValueAnimator: ValueAnimator
 
-        if (minifyButton!!.getTag(minifyButton!!.id) as Boolean) {
+        if (iv_tools_minify!!.getTag(iv_tools_minify!!.id) as Boolean) {
             rotateAnimation = RotateAnimation(
-                180f,
-                0f,
-                Animation.RELATIVE_TO_SELF,
-                0.5f,
-                Animation.RELATIVE_TO_SELF,
-                0.5f
+                    180f,
+                    0f,
+                    Animation.RELATIVE_TO_SELF,
+                    0.5f,
+                    Animation.RELATIVE_TO_SELF,
+                    0.5f
             )
             heightValueAnimator = ValueAnimator.ofInt(0, dpTopX(consoleHeight))
             widthValueAnimator = ValueAnimator.ofInt(dpTopX(MINIFY_WIDTH), dpTopX(consoleWidth))
-            minifyButton!!.setTag(minifyButton!!.id, false)
+            iv_tools_minify!!.setTag(iv_tools_minify!!.id, false)
         } else {
             rotateAnimation = RotateAnimation(
-                0f,
-                180f,
-                Animation.RELATIVE_TO_SELF,
-                0.5f,
-                Animation.RELATIVE_TO_SELF,
-                0.5f
+                    0f,
+                    180f,
+                    Animation.RELATIVE_TO_SELF,
+                    0.5f,
+                    Animation.RELATIVE_TO_SELF,
+                    0.5f
             )
             heightValueAnimator = ValueAnimator.ofInt(dpTopX(consoleHeight), 0)
             widthValueAnimator = ValueAnimator.ofInt(dpTopX(consoleWidth), dpTopX(MINIFY_WIDTH))
-            minifyButton!!.setTag(minifyButton!!.id, true)
+            iv_tools_minify!!.setTag(iv_tools_minify!!.id, true)
         }
 
         heightValueAnimator.duration = 200
         heightValueAnimator.addUpdateListener { animation ->
             val value = animation.animatedValue as Int
-            consoleContainer!!.layoutParams.height = value
-            consoleContainer!!.requestLayout()
+            sv_console_scroll_view.layoutParams.height = value
+            sv_console_scroll_view.requestLayout()
         }
         widthValueAnimator.duration = 200
         widthValueAnimator.addUpdateListener { animation ->
             val value = animation.animatedValue as Int
-            console!!.layoutParams.width = value
-            console!!.requestLayout()
+            tv_console.layoutParams.width = value
+            tv_console.requestLayout()
         }
 
         rotateAnimation.duration = 200
         rotateAnimation.fillAfter = true
-        minifyButton!!.startAnimation(rotateAnimation)
+        iv_tools_minify!!.startAnimation(rotateAnimation)
         heightValueAnimator.interpolator = AccelerateInterpolator()
         heightValueAnimator.start()
         widthValueAnimator.interpolator = AccelerateInterpolator()
         widthValueAnimator.start()
     }
 
-
-    private fun onTouch(v: View, event: MotionEvent): Boolean {
-
-        when (event.action) {
-
-            MotionEvent.ACTION_DOWN -> {
-                dX = v.x - event.rawX
-                dY = v.y - event.rawY
-            }
-            MotionEvent.ACTION_MOVE -> {
-                v.x = event.rawX + dX
-                v.y = event.rawY + dY
-            }
-            MotionEvent.ACTION_UP -> {
-            }
-            else -> return false
-        }
-
-        return true
-    }
 
     /**
      * Call this function at runtime if you want to msg something in the console.
@@ -245,7 +234,7 @@ class DevFragment : Fragment() {
      * `HH:mm:ss > string`
      */
     fun log(string: String) {
-        val sb = StringBuilder(console!!.text)
+        val sb = StringBuilder(tv_console.text)
         sb.append("\n")
         sb.append(currentTime).append("   ")
         sb.append(string)
@@ -256,26 +245,25 @@ class DevFragment : Fragment() {
      * Call this function at runtime if you want to clear the console.
      */
     fun clear() {
-        console!!.text = ""
+        tv_console.text = ""
         softLog("ready")
     }
 
     private fun softLog(string: String) {
-        val sb = StringBuilder(console!!.text)
+        val sb = StringBuilder(tv_console.text)
         sb.append(currentTime).append("   ")
         sb.append(string)
         write(sb.toString())
     }
 
     private fun write(string: String) {
-        console!!.text = string
-        console!!.post {
-            console!!.requestLayout()
-            if (consoleContainer != null) {
-                consoleContainer!!.post {
-                    consoleContainer!!.fullScroll(ScrollView.FOCUS_DOWN)
-                    consoleContainer!!.requestLayout()
-                }
+        tv_console.text = string
+
+        tv_console.post {
+            tv_console?.requestLayout()
+            sv_console_scroll_view?.post {
+                sv_console_scroll_view?.fullScroll(ScrollView.FOCUS_DOWN)
+                sv_console_scroll_view?.requestLayout()
             }
         }
     }
@@ -300,12 +288,12 @@ class DevFragment : Fragment() {
     }
 
     /**
-     * Set the console text size. Must be called after having called build()
+     * Set the tv_console text size. Must be called after having called build()
      *
      * @param sp the size of the text in sp.
      */
     fun changeConsoleTextSize(sp: Int) {
-        console!!.post { console!!.setTextSize(TypedValue.COMPLEX_UNIT_SP, sp.toFloat()) }
+        tv_console.post { tv_console.setTextSize(TypedValue.COMPLEX_UNIT_SP, sp.toFloat()) }
     }
 
     /**
@@ -335,16 +323,16 @@ class DevFragment : Fragment() {
     private fun applyTheme() {
         when (theme) {
             DevToolTheme.LIGHT -> {
-                console!!.setBackgroundColor(getColor(R.color.debug_kit_primary_light))
-                console!!.setTextColor(getColor(R.color.debug_kit_background_black_light))
+                tv_console.setBackgroundColor(getColor(R.color.debug_kit_primary_light))
+                tv_console.setTextColor(getColor(R.color.debug_kit_background_black_light))
             }
             else -> {
-                console!!.setBackgroundColor(getColor(R.color.debug_kit_background_black))
-                console!!.setTextColor(getColor(R.color.debug_kit_primary))
+                tv_console.setBackgroundColor(getColor(R.color.debug_kit_background_black))
+                tv_console.setTextColor(getColor(R.color.debug_kit_primary))
             }
         }
 
-        console!!.setTextSize(TypedValue.COMPLEX_UNIT_SP, consoleTextSize.toFloat())
+        tv_console.setTextSize(TypedValue.COMPLEX_UNIT_SP, consoleTextSize.toFloat())
     }
 
     private fun getColor(resId: Int): Int {
@@ -357,9 +345,9 @@ class DevFragment : Fragment() {
 
     private fun dpTopX(dp: Int): Int {
         return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            dp.toFloat(),
-            resources.displayMetrics
+                TypedValue.COMPLEX_UNIT_DIP,
+                dp.toFloat(),
+                resources.displayMetrics
         ).roundToInt()
     }
 
@@ -374,6 +362,11 @@ class DevFragment : Fragment() {
 
 
     internal fun close() {
+        view?.apply {
+            DevTool.startX = x
+            DevTool.startY = y
+        }
+
         val fragmentManager = fragmentManager ?: return
         fragmentManager.beginTransaction().remove(this).commit()
     }
