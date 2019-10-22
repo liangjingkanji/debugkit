@@ -37,7 +37,7 @@ allprojects {
 module of build.gradle
 
 ```groovy
-implementation 'com.github.liangjingkanji:debugkit:1.2.8'
+implementation 'com.github.liangjingkanji:debugkit:1.2.9'
 ```
 
 

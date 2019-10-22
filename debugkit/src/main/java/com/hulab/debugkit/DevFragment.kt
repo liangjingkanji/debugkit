@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.hulab.debugkit
 
 import android.animation.ValueAnimator
@@ -233,7 +235,7 @@ class DevFragment : Fragment(), View.OnTouchListener {
      * <br></br>
      * `HH:mm:ss > string`
      */
-    fun log(string: String) {
+    fun log(string: Any?) {
         val sb = StringBuilder(tv_console.text)
         sb.append("\n")
         sb.append(currentTime).append("   ")

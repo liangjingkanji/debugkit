@@ -47,7 +47,7 @@ class HomeFragment : Fragment() {
             }
 
             function {
-
+                log(findNavController())
             }
         }
 

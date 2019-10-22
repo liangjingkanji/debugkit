@@ -29,7 +29,7 @@ class DevFunction(private val devFragment: DevFragment) {
      * <br></br>
      * `HH:mm:ss > msg`
      */
-    fun log(msg: String) {
+    fun log(msg: Any?) {
         defaultLog = false
         devFragment.log(msg)
     }
