@@ -1,16 +1,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 
-    package="com.hulab.debugkit.sample">
+    package="com.drake.sample">
 
     <application
         android:allowBackup="true"
+        android:name=".base.App"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:label="@string/debugkit_app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.hulab.debugkit.sample.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
             <intent-filter>

@@ -3,4 +3,16 @@
     <color name="colorPrimary">#022735</color>
     <color name="colorPrimaryDark">#000</color>
     <color name="colorAccent">#7FA4B2</color>
+    <!--辅助颜色-->
+    <color name="divider">#339e9e9e</color>
+    <color name="windowBackground">#fafafa</color>
+
+    <!--字体颜色-->
+    <color name="textColor">#333333</color>
+    <color name="textDescription">#999999</color>
+
+    <!--基本颜色-->
+    <color name="white">#FFFFFF</color>
+    <color name="orange">#F44336</color>
+    <color name="black">#000000</color>
 </resources>

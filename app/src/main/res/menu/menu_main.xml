@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/create"
+        android:icon="@drawable/ic_create"
+        android:title="创建调试窗口" />
+    <item
+        android:id="@+id/log"
+        android:icon="@drawable/ic_print_log"
+        android:title="打印信息" />
+    <item
+        android:id="@+id/theme"
+        android:icon="@drawable/ic_theme"
+        android:title="自定义主题" />
+</menu>

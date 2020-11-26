@@ -1,0 +1,40 @@
+site_name: DebugKit
+site_author: drake
+site_description: DebugKit document
+copyright: Copyright &copy; 2018 - 2020 Drake
+
+repo_name: DebugKit
+repo_url: https://github.com/liangjingkanji/debugkit
+
+extra_css:
+  - css/extra.css
+
+docs_dir: docs
+
+theme:
+  name: material
+  custom_dir: docs/material
+
+  palette:
+    scheme: drake
+    primary: white
+
+  font: false
+
+  language: zh
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed
+
+nav:
+  - 使用: index.md
+  - 输出日志: log.md
+  - 选择主题: theme.md

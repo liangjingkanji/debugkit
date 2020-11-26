@@ -9,16 +9,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_main"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/create">
 
     <fragment
-        android:id="@+id/contentFragment"
-        android:name="com.hulab.debugkit.sample.fragment.ContentFragment"
-        android:label="fragment_content"
-        tools:layout="@layout/fragment_content" />
+        android:id="@+id/create"
+        android:name="com.drake.sample.ui.fragment.CreateFragment"
+        android:label="创建调试窗口"
+        tools:layout="@layout/fragment_create" />
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.hulab.debugkit.sample.fragment.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/theme"
+        android:name="com.drake.sample.ui.fragment.ThemeFragment"
+        android:label="自定义主题"
+        tools:layout="@layout/fragment_theme" />
+    <fragment
+        android:id="@+id/log"
+        android:name="com.drake.sample.ui.fragment.PrintLogFragment"
+        android:label="打印日志"
+        tools:layout="@layout/fragment_print_log" />
 </navigation>
