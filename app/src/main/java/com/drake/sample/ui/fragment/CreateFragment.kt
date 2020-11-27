@@ -17,6 +17,9 @@
 package com.drake.sample.ui.fragment
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.drake.debugkit.dev
@@ -27,6 +30,11 @@ class CreateFragment : Fragment(R.layout.fragment_create) {
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
+        openDev()
+    }
+
+    private fun openDev() {
         dev {
             function {
                 // do something ...
@@ -39,5 +47,14 @@ class CreateFragment : Fragment(R.layout.fragment_create) {
                 close() // 关闭调试窗口
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_create, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        openDev()
+        return super.onOptionsItemSelected(item)
     }
 }

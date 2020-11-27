@@ -19,73 +19,51 @@
 package com.drake.debugkit
 
 import android.animation.ValueAnimator
-import android.app.Fragment
 import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
+import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.debugkit_fragment_dev_tools.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
-class DevFragment : Fragment(), View.OnTouchListener {
-
+class DevFragment : Fragment(R.layout.debugkit_fragment_dev_tools), View.OnTouchListener {
 
     private var consoleHeight = 110
     private var consoleWidth = 250
     private var consoleTextSize = 12
-
-
-    private lateinit var inflater: LayoutInflater
-
     private var functions: MutableList<DevFunction> = ArrayList()
-
-
     private var dX: Float = 0.toFloat()
     private var dY: Float = 0.toFloat()
-
-    private var startX = 0f
-    private var startY = 0f
-
-    private var theme = DevToolTheme.DARK
-
+    private var startX: Float by lazyField { context?.run { resources.displayMetrics.widthPixels / 2F - 126 * resources.displayMetrics.density } ?: DevTool.defaultX }
+    private var startY: Float by lazyField { context?.run { resources.displayMetrics.heightPixels / 2F - 131 * resources.displayMetrics.density } ?: DevTool.defaultY }
+    private var theme = DevTheme.DARK
     private val currentTime: String
         get() {
             val df = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
             return df.format(Calendar.getInstance().time)
         }
 
-    internal fun displayAt(x: Float, y: Float) {
-        this.startX = x
-        this.startY = y
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        this.inflater = inflater
-
-        return inflater.inflate(R.layout.debugkit_fragment_dev_tools, container, false)
+    internal fun displayAt(x: Float? = null, y: Float? = null) {
+        x?.let { this.startX = it }
+        y?.let { this.startY = it }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         for (i in functions.indices) {
 
-            val button = inflater.inflate(
-                if (theme == DevToolTheme.DARK) R.layout.debugkit_function_button_dark else R.layout.debugkit_function_button_light,
+            val button = layoutInflater.inflate(
+                if (theme == DevTheme.DARK) R.layout.debugkit_function_button_dark else R.layout.debugkit_function_button_light,
                 ll_button_container,
                 false
             ) as Button
@@ -115,16 +93,7 @@ class DevFragment : Fragment(), View.OnTouchListener {
         }
 
         iv_tools_close_button.setOnClickListener {
-            if (isAdded) {
-                try {
-                    activity!!.fragmentManager
-                        .beginTransaction()
-                        .remove(this@DevFragment)
-                        .commit()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
+            if (isAdded) close()
         }
 
         view.setOnTouchListener(this)
@@ -177,7 +146,7 @@ class DevFragment : Fragment(), View.OnTouchListener {
         val heightValueAnimator: ValueAnimator
         val widthValueAnimator: ValueAnimator
 
-        if (iv_tools_minify!!.getTag(iv_tools_minify!!.id) as Boolean) {
+        if (iv_tools_minify.getTag(iv_tools_minify.id) as Boolean) {
             rotateAnimation = RotateAnimation(
                 180f,
                 0f,
@@ -187,8 +156,8 @@ class DevFragment : Fragment(), View.OnTouchListener {
                 0.5f
             )
             heightValueAnimator = ValueAnimator.ofInt(0, dpTopX(consoleHeight))
-            widthValueAnimator = ValueAnimator.ofInt(dpTopX(MINIFY_WIDTH), dpTopX(consoleWidth))
-            iv_tools_minify!!.setTag(iv_tools_minify!!.id, false)
+            widthValueAnimator = ValueAnimator.ofInt(dpTopX(DevTool.minWidth), dpTopX(consoleWidth))
+            iv_tools_minify.setTag(iv_tools_minify.id, false)
         } else {
             rotateAnimation = RotateAnimation(
                 0f,
@@ -199,8 +168,8 @@ class DevFragment : Fragment(), View.OnTouchListener {
                 0.5f
             )
             heightValueAnimator = ValueAnimator.ofInt(dpTopX(consoleHeight), 0)
-            widthValueAnimator = ValueAnimator.ofInt(dpTopX(consoleWidth), dpTopX(MINIFY_WIDTH))
-            iv_tools_minify!!.setTag(iv_tools_minify!!.id, true)
+            widthValueAnimator = ValueAnimator.ofInt(dpTopX(consoleWidth), dpTopX(DevTool.minWidth))
+            iv_tools_minify.setTag(iv_tools_minify.id, true)
         }
 
         heightValueAnimator.duration = 200
@@ -218,7 +187,7 @@ class DevFragment : Fragment(), View.OnTouchListener {
 
         rotateAnimation.duration = 200
         rotateAnimation.fillAfter = true
-        iv_tools_minify!!.startAnimation(rotateAnimation)
+        iv_tools_minify.startAnimation(rotateAnimation)
         heightValueAnimator.interpolator = AccelerateInterpolator()
         heightValueAnimator.start()
         widthValueAnimator.interpolator = AccelerateInterpolator()
@@ -252,10 +221,10 @@ class DevFragment : Fragment(), View.OnTouchListener {
         softLog("ready")
     }
 
-    private fun softLog(string: String) {
+    private fun softLog(message: String) {
         val sb = StringBuilder(tv_console.text)
         sb.append(currentTime).append("   ")
-        sb.append(string)
+        sb.append(message)
         write(sb.toString())
     }
 
@@ -302,10 +271,10 @@ class DevFragment : Fragment(), View.OnTouchListener {
     /**
      * Set the console text size. The size will be applied on build.
      *
-     * @param sp the size of the text in sp.
+     * @param dp the size of the text in sp.
      */
-    fun setConsoleTextSize(sp: Int) {
-        consoleTextSize = sp
+    fun setConsoleTextSize(dp: Int) {
+        consoleTextSize = dp
     }
 
     /**
@@ -314,7 +283,7 @@ class DevFragment : Fragment(), View.OnTouchListener {
      * @param theme can be `DevToolTheme.LIGHT` or `DevToolTheme.DARK`.
      * The default theme is `DevToolTheme.DARK`
      */
-    fun setTheme(theme: DevToolTheme) {
+    fun setTheme(theme: DevTheme) {
         this.theme = theme
     }
 
@@ -325,7 +294,7 @@ class DevFragment : Fragment(), View.OnTouchListener {
      */
     private fun applyTheme() {
         when (theme) {
-            DevToolTheme.LIGHT -> {
+            DevTheme.LIGHT -> {
                 tv_console.setBackgroundColor(getColor(R.color.debug_kit_primary_light))
                 tv_console.setTextColor(getColor(R.color.debug_kit_background_black_light))
             }
@@ -335,7 +304,7 @@ class DevFragment : Fragment(), View.OnTouchListener {
             }
         }
 
-        tv_console.setTextSize(TypedValue.COMPLEX_UNIT_SP, consoleTextSize.toFloat())
+        tv_console.setTextSize(TypedValue.COMPLEX_UNIT_DIP, consoleTextSize.toFloat())
     }
 
     private fun getColor(resId: Int): Int {
@@ -366,12 +335,14 @@ class DevFragment : Fragment(), View.OnTouchListener {
 
     internal fun close() {
         view?.apply {
-            DevTool.startX = x
-            DevTool.startY = y
+            DevTool.defaultX = x
+            DevTool.defaultY = y
         }
-
-        val fragmentManager = fragmentManager ?: return
-        fragmentManager.beginTransaction().remove(this).commit()
+        try {
+            fragmentManager?.beginTransaction()?.remove(this)?.commitAllowingStateLoss()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 
@@ -382,18 +353,5 @@ class DevFragment : Fragment(), View.OnTouchListener {
      */
     fun setConsoleWidth(consoleWidth: Int) {
         this.consoleWidth = consoleWidth
-    }
-
-    /**
-     * Enum, theme choices for the debug tool.
-     */
-    enum class DevToolTheme {
-        DARK,
-        LIGHT
-    }
-
-    companion object {
-
-        private val MINIFY_WIDTH = 132
     }
 }

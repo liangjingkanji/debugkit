@@ -16,25 +16,10 @@
 
 package com.drake.debugkit
 
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-
 /**
- * 创建调试窗口
+ * 调试窗口主题
  */
-fun FragmentActivity.dev(devTool: DevTool? = null, block: DevTool.() -> Unit) {
-    val realDev = devTool ?: DevTool(this)
-    realDev.block()
-    realDev.build()
-}
-
-/**
- * 创建调试窗口
- * 在Fragment视图销毁(onDestroyView)时会被关闭调试窗口, 支持Navigation
- */
-fun Fragment.dev(devTool: DevTool? = null, block: DevTool.() -> Unit) {
-    val realDev = devTool ?: DevTool(requireActivity())
-    lifecycle.addObserver(realDev)
-    realDev.block()
-    realDev.build()
+enum class DevTheme {
+    DARK,
+    LIGHT
 }

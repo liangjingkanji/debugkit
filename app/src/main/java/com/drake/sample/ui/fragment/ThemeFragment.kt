@@ -19,7 +19,7 @@ package com.drake.sample.ui.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.drake.debugkit.DevFragment
+import com.drake.debugkit.DevTheme
 import com.drake.debugkit.dev
 import com.drake.sample.R
 
@@ -29,10 +29,10 @@ class ThemeFragment : Fragment(R.layout.fragment_theme) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         dev {
-            theme = DevFragment.DevToolTheme.LIGHT // 调试窗口亮色主题
+            theme = DevTheme.LIGHT // 调试窗口亮色主题
             // theme = DevFragment.DevToolTheme.DARK // 调试窗口暗色主题
-            startX = 300F // 调试窗口开始显示坐标位置
-            startY = 500F
+            startX = 200F // 调试窗口开始显示坐标位置
+            startY = 200F
             textSize = 10 // 窗口输出内容字体大小 单位/dp
 
             function {

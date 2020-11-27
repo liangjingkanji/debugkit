@@ -14,31 +14,34 @@
  * limitations under the License.
  */
 
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package com.drake.debugkit
 
-import android.app.Activity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 import java.util.*
 
-class DevTool(val activity: Activity) : LifecycleObserver {
+class DevTool(val activity: FragmentActivity) : LifecycleObserver {
 
     companion object {
         var enabled = true // 是否显示调试窗口
-        internal var startX = 0f
-        internal var startY = 0f
+        var defaultX = 0F // 默认显示坐标位置
+        var defaultY = 0F
+        var minWidth = 132 // 最小窗口宽度
     }
 
     private val functions = ArrayList<DevFunction>()
-    private val devFragment: DevFragment = DevFragment()
+    private val devFragment = DevFragment()
 
-    var theme: DevFragment.DevToolTheme = DevFragment.DevToolTheme.DARK
-    var textSize: Int? = null
-    var startX = DevTool.startX
-    var startY = DevTool.startY
+    var theme: DevTheme = DevTheme.DARK
+    var textSize: Int = 12
+    var startX: Float? = null
+    var startY: Float? = null
 
     /**
      * 添加一个按钮到调试窗口
@@ -67,20 +70,16 @@ class DevTool(val activity: Activity) : LifecycleObserver {
         if (!enabled) {
             return
         }
-        if (functions.size > 0)
-            devFragment.setFunctionList(functions)
-        if (textSize != null)
-            devFragment.setConsoleTextSize(textSize!!)
+        if (functions.size > 0) devFragment.setFunctionList(functions)
+        devFragment.setConsoleTextSize(textSize)
         devFragment.displayAt(startX, startY)
         try {
-            val fragmentManager = activity.fragmentManager
-            fragmentManager.beginTransaction()
+            activity.supportFragmentManager.beginTransaction()
                 .add(android.R.id.content, devFragment)
-                .commit()
-        } catch (exception: Exception) {
-            exception.printStackTrace()
+                .commitAllowingStateLoss()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-
         devFragment.setTheme(theme)
     }
 
